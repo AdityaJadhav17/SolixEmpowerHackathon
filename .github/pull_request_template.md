@@ -10,7 +10,7 @@ Stories: US-
 
 ## Checklist
 
-- [ ] HANDOFF.md sections 1-3 updated
+- [ ] README or docs updated if behavior, setup or results changed
 - [ ] Tests added or updated (regression test first for bug fixes)
 - [ ] `npm run lint && npm run typecheck && npm test && npm run test:safety` pass locally
 - [ ] No eligibility wording ("you are eligible", "you qualify", ...) in UI text or prompts
