@@ -70,9 +70,10 @@ main > .reading {
   animation: enter 240ms var(--ease-out);
 }
 
+/* Starts above 0 so the first paint counts for LCP. */
 @keyframes enter {
   from {
-    opacity: 0;
+    opacity: 0.5;
     transform: translateY(8px);
   }
 }

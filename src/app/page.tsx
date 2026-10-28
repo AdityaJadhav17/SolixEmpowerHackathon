@@ -73,8 +73,8 @@ export default function Home() {
           name: "error",
           message:
             res.status === 413
-              ? "That photo is too large to send. Please take a new photo."
-              : "We couldn't read your letter right now. Please try again.",
+              ? "That photo is too big to send. Take a new one from a little farther back."
+              : "The reading service didn't answer. Your photo is still here, so you can try again.",
         });
         return;
       }
@@ -105,7 +105,7 @@ export default function Home() {
     } catch {
       setView({
         name: "capture",
-        error: "We couldn't open that photo. Please take a new one.",
+        error: "This phone couldn't open that photo. Take a new one.",
       });
     }
   }
@@ -131,7 +131,7 @@ export default function Home() {
         )}
         {view.name === "reading" && (
           <p role="status" className="reading">
-            Reading your letter. This takes about 15 seconds.
+            Reading your letter. This can take up to 30 seconds.
           </p>
         )}
         {view.name === "offline" && (
@@ -144,7 +144,7 @@ export default function Home() {
         )}
         {view.name === "error" && (
           <Problem
-            title="Something went wrong"
+            title="We couldn't finish reading your letter"
             text={view.message}
             action="Try again"
             onAction={() => (photo ? send(photo) : retake())}
@@ -188,17 +188,21 @@ export default function Home() {
 function Consent({ onAccept }: { onAccept: () => void }) {
   return (
     <section aria-labelledby="consent-title">
-      <h2 id="consent-title">Before you start</h2>
+      <h2 id="consent-title">Before you send a photo</h2>
       <p className="lead">
-        Take a photo of your OHP letter. We explain what it asks for, the
-        deadline, and what to send.
+        Take a photo of a letter from the Oregon Health Plan. You&apos;ll see
+        what it asks you to do, the due date, and which papers to send.
       </p>
       <ul className="facts">
-        <li>Your photo is sent to an AI service so it can be read.</li>
+        <li>An AI service reads your photo for us.</li>
         <li>We don&apos;t store your photo or your answers.</li>
-        <li>This is not legal advice. Only the state decides your coverage.</li>
         <li>
-          You can always call OHP. The number is at the bottom of every screen.
+          This isn&apos;t legal advice. Only the Oregon Health Authority decides
+          your coverage.
+        </li>
+        <li>
+          If you&apos;d rather talk to a person, the OHP phone number is at the
+          bottom of every screen.
         </li>
       </ul>
       <button type="button" className="primary" onClick={onAccept}>
@@ -217,9 +221,10 @@ function Capture({
 }) {
   return (
     <section aria-labelledby="capture-title">
-      <h2 id="capture-title">Scan your letter</h2>
+      <h2 id="capture-title">Photograph the first page</h2>
       <p className="lead">
-        Lay the first page flat in good light. Fit the whole page in the photo.
+        Lay it flat near a window or lamp, and get all four corners in the
+        frame.
       </p>
       <label className="primary pick">
         <input
@@ -268,11 +273,11 @@ function Unclear({ onRetake }: { onRetake: () => void }) {
   return (
     <section aria-labelledby="unclear-title">
       <h2 id="unclear-title">We couldn&apos;t read this clearly</h2>
-      <p className="lead">Try another photo:</p>
+      <p className="lead">A new photo usually fixes it:</p>
       <ul className="facts">
-        <li>Turn on more light, or move near a window.</li>
+        <li>Turn on a light or move closer to a window.</li>
         <li>Lay the letter on a flat surface.</li>
-        <li>Fill the frame with the page.</li>
+        <li>Hold the phone straight above the page so it fills the frame.</li>
       </ul>
       <button type="button" className="primary" onClick={onRetake}>
         Take a new photo
@@ -299,7 +304,8 @@ function Result({
           This doesn&apos;t look like a Medicaid or OHP letter
         </h2>
         <p className="lead">
-          If you think it is, call {phone} and ask about it.
+          If it came from OHP or the Oregon Health Authority, call {phone} and
+          they can tell you what it means.
         </p>
         <button type="button" className="primary" onClick={onRetake}>
           Scan another letter
@@ -316,10 +322,10 @@ function Result({
 
       <Deadline data={data} phone={phone} />
 
-      <h3>What to do</h3>
+      <h3>What the letter asks you to do</h3>
       <p>{data.required_action ? safe(data.required_action) : NOT_SURE}</p>
 
-      <h3>What to send</h3>
+      <h3>Papers to send</h3>
       {data.documents.length > 0 ? (
         <ul className="checklist">
           {data.documents.map((doc, i) => (
@@ -360,7 +366,7 @@ function Deadline({ data, phone }: { data: LetterExtraction; phone: string }) {
   );
   return (
     <div className={`deadline ${status}`} data-testid="deadline">
-      <h3>Deadline</h3>
+      <h3>Due date</h3>
       {status === "unknown" ? (
         <>
           <p className="big">{NOT_SURE}</p>
@@ -404,7 +410,9 @@ function Screening({ onDone }: { onDone: (yes: string[]) => void }) {
     >
       <h2 id="screening-title">Exemption questions</h2>
       <p className="lead">
-        Answer what you can. Skip any question you don&apos;t want to answer.
+        Some OHP members don&apos;t have to meet the work rule. These questions
+        follow the Oregon Health Authority&apos;s list. Skip any you&apos;d
+        rather not answer.
       </p>
       <p>
         These questions use Oregon Health Plan (OHP) rules. If your letter is
