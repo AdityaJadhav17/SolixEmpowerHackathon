@@ -56,6 +56,15 @@ test("health condition yes drafts an editable, copyable doctor note", async ({
     await page.evaluate(() => (window as unknown as { copied: string }).copied),
   ).toBe("My edited note");
 
+  // Screen fade-ins would otherwise be measured at half opacity.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
+  );
   const results = await new AxeBuilder({ page }).analyze();
   expect(
     results.violations.filter(
