@@ -8,7 +8,6 @@ Photograph a Medicaid letter and learn what it asks for, when it is due, and who
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
 [![Deployed on Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://coverage-keeper.vercel.app)
-[![Devpost](https://img.shields.io/badge/Devpost-submission-003E54?logo=devpost&logoColor=white)](DEVPOST_URL_TBD)
 [![Printed deadline read correctly: 4/4 test letters](https://img.shields.io/badge/printed%20deadline-4%2F4%20test%20letters-2E7D32)](#evaluation)
 
 Solix Empower Hackathon, AI in Healthcare track.
@@ -16,7 +15,6 @@ Solix Empower Hackathon, AI in Healthcare track.
 ## Demo
 
 - Live app: [coverage-keeper.vercel.app](https://coverage-keeper.vercel.app)
-- Video: [VIDEO_URL_TBD](VIDEO_URL_TBD)
 
 | Consent                                                        | Result                                                       | Exemption screening                                               |
 | -------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------- |
