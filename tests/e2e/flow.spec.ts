@@ -142,6 +142,9 @@ test("exemption screening shows rules that may apply", async ({ page }) => {
   await start(page);
   await scan(page);
   await page.getByRole("button", { name: "Check exemptions" }).click();
+  await expect(
+    page.getByText(/use Oregon Health Plan \(OHP\) rules/),
+  ).toBeVisible();
 
   await page
     .getByRole("group", { name: "Do you have Medicare?" })
