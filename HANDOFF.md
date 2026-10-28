@@ -4,10 +4,10 @@
 
 ## 1. Status
 
-_2026-10-28 15:35 PDT._ **Backend, UI, doctor draft (PR #6) and eval set (PR #7) are on `main`. UI polish in review (PR #8, `feat/ui-polish`).**
+_2026-10-28 15:50 PDT._ **Backend, UI, doctor draft (PR #6), eval set (PR #7) and UI polish (PR #8, merged 15:47) are all on `main`. Production deploy after the merge not yet confirmed.**
 
 - Backend (Eng A, merged via PR #2): `readLetter` calls `claude-opus-5-5` (effort medium, structured output via `zodOutputFormat`), falls back to a low-confidence "unsure" result on refusal/empty/invalid output, retries once on 429/5xx. `POST /api/read` takes multipart `image` (jpeg/png/webp, max 4 MB), applies the guardrail to every user-facing string (`summary`, `required_action`, `deadline_quote`, each of `documents`); model call has `max_tokens` 16000 (thinking counts toward it) and a 30 s timeout, logs only status/latency/model/error class. `LETTER_READER=fixture` returns the recorded fixture with no network. One real call on a synthetic notice returned schema-valid JSON in ~6 s.
-- UI polish (Eng B, PR #8): CSS-only native feel (safe areas, `100dvh`, no tap flash, hover gated to mouse, 16px inputs), deadline card as hero (big date, status icon + text, never color alone), short screen fade-in and checklist tick, all motion off under `prefers-reduced-motion`, dark mode via tokens on `:root`, translucent call bar with solid fallback under `prefers-reduced-transparency`. Only `globals.css` and the `viewport` export in `layout.tsx` changed; doctor-note textarea border raised to `--muted` (3:1). Before/after shots in `docs/screenshots/ui-polish/`. Green locally and in CI: lint, format, typecheck, unit (113), integration (7), safety (18), build, E2E (30, incl. dark-mode axe), hygiene. **Not checked on a real iPhone yet.**
+- UI polish (Eng B, PR #8, merged): CSS-only native feel (safe areas, `100dvh`, no tap flash, hover gated to mouse, 16px inputs), deadline card as hero (big date, status icon + text, never color alone), short screen fade-in and checklist tick, all motion off under `prefers-reduced-motion`, dark mode via tokens on `:root`, translucent call bar with solid fallback under `prefers-reduced-transparency`. Only `globals.css` and the `viewport` export in `layout.tsx` changed; doctor-note textarea border raised to `--muted` (3:1). Before/after shots in `docs/screenshots/ui-polish/`. Green locally and in CI: lint, format, typecheck, unit (113), integration (7), safety (18), build, E2E (30, incl. dark-mode axe), hygiene. **Not checked on a real iPhone yet.**
 - UI (Eng B, PR #3, merged): consent → capture → result (summary, deadline + days left + highlighted quote, checklist, who to call) → exemption screening, plus offline, error, low-confidence and not-OHP screens. Low confidence is checked before `notice_type`, per Eng A's contract. Pure logic in `src/lib/deadline.ts`, `screening.ts`, `image.ts`, `phone.ts`. E2E mocks `/api/read`. Not yet checked on a real iPhone.
 - Eval: 10 notices + 3 phone photos labeled; dev and test runs done (PR #7). ADRs still **Proposed**. Deadline: **18:00 PDT today** (Devpost).
 
@@ -24,13 +24,13 @@ Eng C update 3 (~15:10 PDT): 3 phone photos added (`*-photo.jpg`, test split; no
 Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mvp.md) milestones).
 
 1. **Eng A:** (PR #2 merged) run `npm run eval` once Eng C has labels. API contract for Eng B: `POST /api/read` (form field `image`) returns `LetterExtraction` JSON on 200, or `{ error }` on 400/413/502 (502 message includes the OHP phone). When `confidence` is `"low"`, show the "we couldn't read this" state and ignore `notice_type` (the unsure result uses `other_medicaid` even for non-letters).
-2. **Eng B:** merge PR #8 (`feat/ui-polish`) with green CI by 16:30; run `npm run dev` with `LETTER_READER=fixture` and test the flow on a real iPhone on the same Wi-Fi (`http://<laptop-ip>:3000`).
+2. **Eng B:** (PR #8 merged) confirm the production deploy ran, then run `npm run dev` with `LETTER_READER=fixture` and test the flow on a real iPhone on the same Wi-Fi (`http://<laptop-ip>:3000`).
 3. **Eng D:** (PR #6 merged) test Copy/Share on a real iPhone.
 4. **Eng C:** collect 10-15 public Oregon sample notices into `eval/letters/` (PNG/JPEG; convert PDF pages), label them in `eval/labels.json`, take 3 phone photos of printed samples. Then the video and Devpost write-up.
 
 ## 3. Recent changes (newest first)
 
-1. 2026-10-28: Eng B: UI polish (PR #8) in `globals.css`: native mobile fixes, deadline hero with status icons, motion with reduced-motion off switch, dark mode; `viewport-fit=cover` + per-scheme `themeColor`; E2E dark-mode axe check, a11y helper waits for fade-ins.
+1. 2026-10-28: Eng B: UI polish (PR #8, merged 15:47 with all CI green) in `globals.css`: native mobile fixes, deadline hero with status icons, motion with reduced-motion off switch, dark mode; `viewport-fit=cover` + per-scheme `themeColor`; E2E dark-mode axe check, a11y helper waits for fade-ins.
 2. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
 3. 2026-10-28: Eng C: eval dataset (10 notices + 3 phone photos), dev and test runs done. Video, README demo section, Devpost still open.
 4. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
