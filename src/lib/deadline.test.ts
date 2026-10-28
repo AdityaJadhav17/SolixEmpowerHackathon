@@ -24,6 +24,10 @@ describe("daysUntil", () => {
     expect(daysUntil("2027-02-15", now)).toBe(-1);
   });
 
+  it("throws on an invalid date", () => {
+    expect(() => daysUntil("2027-13-01", new Date())).toThrow();
+  });
+
   it("moves by exactly one per added day (property)", () => {
     fc.assert(
       fc.property(
