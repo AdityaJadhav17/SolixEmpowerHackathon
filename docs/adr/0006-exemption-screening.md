@@ -1,6 +1,6 @@
 # ADR-0006: Exemption screening logic
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-10-28
 
 ## Context and problem statement

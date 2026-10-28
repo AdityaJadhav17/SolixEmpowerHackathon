@@ -1,6 +1,6 @@
 # ADR-0001: Application stack
 
-- Status: Proposed (needs team approval)
+- Status: Accepted
 - Date: 2026-10-28
 
 ## Context and problem statement

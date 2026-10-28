@@ -1,6 +1,6 @@
 # ADR-0005: Safety guardrails
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-10-28
 
 ## Context and problem statement

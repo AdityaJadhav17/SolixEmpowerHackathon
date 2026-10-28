@@ -1,6 +1,6 @@
 # ADR-0008: CI/CD and hosting
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-10-28
 
 ## Decision outcome

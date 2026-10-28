@@ -1,6 +1,6 @@
 # ADR-0009: Dependency policy
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-10-28
 
 ## Decision outcome
