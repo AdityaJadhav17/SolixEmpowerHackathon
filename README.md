@@ -1,7 +1,7 @@
 # SolixEmpowerHackathon
 
-
 **Author:** Woosik Kim
+
 Our project for the Solix Empower Hackathon.
 
 ## Structure
