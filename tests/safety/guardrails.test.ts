@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { buildDoctorDraft } from "@/lib/doctor-draft";
 import { findForbiddenClaims } from "@/lib/guardrails";
 import rules from "../../data/rules/or.json";
 
@@ -40,6 +41,17 @@ describe("shipped text contains no eligibility claims", () => {
       findForbiddenClaims(readFileSync(path.join(fixtureDir, file), "utf8")),
     ).toEqual([]);
   });
+
+  it.each([null, "2027-02-15", "2027-02-01"])(
+    "doctor note draft (deadline %j)",
+    (deadline) => {
+      const draft = buildDoctorDraft({
+        deadline,
+        today: new Date("2027-02-10T10:00:00-08:00"),
+      });
+      expect(findForbiddenClaims(draft)).toEqual([]);
+    },
+  );
 
   it("fixed UI strings in the app screens", () => {
     const ui = readFileSync(
