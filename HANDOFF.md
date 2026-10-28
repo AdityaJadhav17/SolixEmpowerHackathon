@@ -6,6 +6,8 @@
 
 _2026-10-28 15:00 PDT._ Letter reader backend is in (branch `eng-a`): `readLetter` calls `claude-opus-5-5` (effort medium, structured output via `zodOutputFormat`), falls back to a low-confidence "unsure" result on refusal/empty/invalid output, retries once on 429/5xx. `POST /api/read` takes multipart `image` (jpeg/png/webp, max 4 MB), applies the guardrail to every user-facing string (`summary`, `required_action`, `deadline_quote`, each of `documents`); model call has `max_tokens` 16000 (thinking counts toward it) and a 30 s timeout, logs only status/latency/model/error class. `LETTER_READER=fixture` returns the recorded fixture with no network. One real call on a synthetic notice returned schema-valid JSON in ~6 s. Home page still static; `eval/labels.json` still empty. Locally green: lint, typecheck, unit (45), integration (7), safety (14), build, hygiene. ADRs still **Proposed**. Deadline: **18:00 PDT today** (Devpost).
 
+Eng C update (2026-10-28 ~14:45 PDT): PR #4 (`eval/dataset`) adds 10 labeled public .gov sample notices (page 1 of each PDF; 3 Oregon, 7 Vermont; 4 dev, 6 test; split fixed before any run). Only 3 true Oregon sample notices exist online, so Vermont fills the rest. Dev run (prompt v1): deadline 4 of 4, notice type 4 of 4, required action 1 of 4 (strict token-subset metric, labels are long phrases), doc recall 0.75, precision 0.63, guardrail hits 0. **Test split NOT run yet:** waiting for the 3 phone photos of printed samples so the test run happens once on the full set. Photos still needed from a human with an iPhone (print any `eval/letters/*.png`, save as `<id>-photo.jpg` with location stripped, add labels).
+
 ## 2. Current task and next 3 actions
 
 Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mvp.md) milestones).
@@ -16,6 +18,7 @@ Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mv
 
 ## 3. Recent changes (newest first)
 
+0. 2026-10-28: Eng C: eval dataset (10 notices) + labels, dev eval run. Test run, photos, video, README demo section, Devpost still open.
 1. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
 2. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
 3. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
