@@ -5,6 +5,7 @@ import rules from "../../data/rules/or.json";
 import { deadlineStatus } from "@/lib/deadline";
 import { enforceGuardrail } from "@/lib/guardrails";
 import { rejectReason, toUploadJpeg } from "@/lib/image";
+import { FALLBACK_TEL, phoneHref } from "@/lib/phone";
 import { LetterExtraction } from "@/lib/schema";
 import { mayApply } from "@/lib/screening";
 
@@ -45,7 +46,7 @@ function formatDate(iso: string) {
 
 function letterPhone(data: LetterExtraction | null) {
   const phone = data?.contact_phone ? safe(data.contact_phone) : "";
-  return phone.replace(/\D/g, "").length >= 10 ? phone : OHP_PHONE;
+  return phoneHref(phone) !== FALLBACK_TEL ? phone : OHP_PHONE;
 }
 
 export default function Home() {
@@ -176,7 +177,7 @@ export default function Home() {
       </main>
       <footer className="callbar">
         <span>Questions? Call</span>
-        <a href={`tel:+1${phone.replace(/\D/g, "").slice(-10)}`}>{phone}</a>
+        <a href={phoneHref(phone)}>{phone}</a>
       </footer>
     </>
   );
