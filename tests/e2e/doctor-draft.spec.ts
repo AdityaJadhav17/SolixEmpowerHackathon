@@ -80,3 +80,28 @@ test("no health condition yes hides the doctor note", async ({ page }) => {
     page.getByRole("button", { name: "Draft a note to my doctor" }),
   ).toHaveCount(0);
 });
+
+test("copy failure tells the user to copy by hand", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: () => Promise.reject(new Error("denied")) },
+    });
+  });
+  await page.route("**/api/read", (route) => route.fulfill({ json: fixture }));
+  await page.goto("/");
+  await page.getByRole("button", { name: "I understand" }).click();
+  await page.getByLabel("Scan my letter").setInputFiles(PNG);
+  await page.getByRole("button", { name: "Check exemptions" }).click();
+  await page
+    .getByRole("group", {
+      name: "Do you have a serious or disabling health condition?",
+    })
+    .getByLabel("Yes")
+    .check();
+  await page.getByRole("button", { name: "See what may apply" }).click();
+  await page.getByRole("button", { name: "Draft a note to my doctor" }).click();
+  await page.getByRole("button", { name: "Copy" }).click();
+  await expect(page.getByRole("status")).toHaveText(
+    "Couldn't copy. Press and hold the text to copy it.",
+  );
+});

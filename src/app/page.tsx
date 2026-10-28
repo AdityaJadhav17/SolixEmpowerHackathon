@@ -486,7 +486,7 @@ function Screened({
 // Built and kept in the browser only; nothing is sent or stored (US-040, US-041).
 function DoctorDraft({ deadline }: { deadline: string | null }) {
   const [draft, setDraft] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
   if (draft === null) {
     return (
       <button
@@ -512,7 +512,7 @@ function DoctorDraft({ deadline }: { deadline: string | null }) {
         value={draft}
         onChange={(e) => {
           setDraft(e.target.value);
-          setCopied(false);
+          setCopyStatus("");
         }}
       />
       <div className="actions">
@@ -520,7 +520,16 @@ function DoctorDraft({ deadline }: { deadline: string | null }) {
           type="button"
           className="primary"
           onClick={() =>
-            navigator.clipboard.writeText(draft).then(() => setCopied(true))
+            // Also catches a missing clipboard API (older iOS, insecure context).
+            Promise.resolve()
+              .then(() => navigator.clipboard.writeText(draft))
+              .then(
+                () => setCopyStatus("Copied"),
+                () =>
+                  setCopyStatus(
+                    "Couldn't copy. Press and hold the text to copy it.",
+                  ),
+              )
           }
         >
           Copy
@@ -536,7 +545,7 @@ function DoctorDraft({ deadline }: { deadline: string | null }) {
         )}
       </div>
       <p role="status" className="copied">
-        {copied ? "Copied" : ""}
+        {copyStatus}
       </p>
     </div>
   );
