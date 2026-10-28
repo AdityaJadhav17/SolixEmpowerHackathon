@@ -11,6 +11,8 @@ _2026-10-28 15:20 PDT._ **Backend and UI both exist; UI awaits merge (PR #3, `fe
 - Locally green on `feat/ui-flow` after rebase: lint, format, typecheck, unit (103), integration (7), safety (15), build, E2E (22 = 11 × iPhone + Android), hygiene.
 - `eval/labels.json` still empty. ADRs still **Proposed**. Deadline: **18:00 PDT today** (Devpost).
 
+Eng D update (2026-10-28 ~15:15 PDT): PR `feat/doctor-draft` adds US-040/US-041. After screening, if "health_condition" was answered yes, "Draft a note to my doctor" opens an editable textarea with a template note (no LLM): asks the doctor for a statement on whether a health condition limits work/activities for 80 hours a month, includes the letter deadline if known, a `[describe your condition in your own words]` placeholder, and the OHP source URL. Copy (clipboard) and Share (only if `navigator.share` exists). Nothing sent or stored. Locally green: lint, format, typecheck, unit (113), integration (7), safety (18), build, E2E (26). Hard stop: merged with green CI by 17:00 PDT or dropped.
+
 Eng C update (2026-10-28 ~14:45 PDT): PR #4 (`eval/dataset`) adds 10 labeled public .gov sample notices (page 1 of each PDF; 3 Oregon, 7 Vermont; 4 dev, 6 test; split fixed before any run). Only 3 true Oregon sample notices exist online, so Vermont fills the rest. Dev run (prompt v1): deadline 4 of 4, notice type 4 of 4, required action 1 of 4 (strict token-subset metric, labels are long phrases), doc recall 0.75, precision 0.63, guardrail hits 0. **Test split NOT run yet:** waiting for the 3 phone photos of printed samples so the test run happens once on the full set. Photos still needed from a human with an iPhone (print any `eval/letters/*.png`, save as `<id>-photo.jpg` with location stripped, add labels).
 
 Eng C update 2 (~14:50 PDT): required_action labels shortened to 2-4 key words (all splits); `eval/run.ts` now reports "Printed deadline read correctly" and "No deadline correctly reported as none" (stage claim uses the first); `deadlineSplit` unit-tested. Dev re-run: printed deadline 2 of 2, none 2 of 2, type 4 of 4, action 2 of 4, doc recall 1.00, precision 0.88, guardrail 0. Test still NOT run: the 3 iPhone photos from Eng B are not in the repo or on this machine yet.
@@ -21,22 +23,24 @@ Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mv
 
 1. **Eng A:** (PR #2 merged) run `npm run eval` once Eng C has labels. API contract for Eng B: `POST /api/read` (form field `image`) returns `LetterExtraction` JSON on 200, or `{ error }` on 400/413/502 (502 message includes the OHP phone). When `confidence` is `"low"`, show the "we couldn't read this" state and ignore `notice_type` (the unsure result uses `other_medicaid` even for non-letters).
 2. **Eng B:** review + merge `feat/ui-flow`; run `npm run dev` with `LETTER_READER=fixture` and test the flow on a real iPhone on the same Wi-Fi (`http://<laptop-ip>:3000`).
-3. **Eng C:** collect 10-15 public Oregon sample notices into `eval/letters/` (PNG/JPEG; convert PDF pages), label them in `eval/labels.json`, take 3 phone photos of printed samples. Then the video and Devpost write-up.
+3. **Eng D:** get `feat/doctor-draft` reviewed and merged by 17:00 PDT; test Copy/Share on a real iPhone.
+4. **Eng C:** collect 10-15 public Oregon sample notices into `eval/letters/` (PNG/JPEG; convert PDF pages), label them in `eval/labels.json`, take 3 phone photos of printed samples. Then the video and Devpost write-up.
 
 ## 3. Recent changes (newest first)
 
-0. 2026-10-28: Eng C: eval dataset (10 notices) + labels, dev eval run. Test run, photos, video, README demo section, Devpost still open.
-1. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
-2. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
-3. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
-4. 2026-10-28: E2E `tests/e2e/flow.spec.ts` mocks `/api/read` with `page.route` and fixes the clock with `page.clock`; safety suite now also scans the UI strings in `page.tsx`.
-5. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
-6. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
-7. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
-8. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
-9. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
-10. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
-11. 2026-10-28: Initial scaffold, community files, README author line.
+0. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
+1. 2026-10-28: Eng C: eval dataset (10 notices) + labels, dev eval run. Test run, photos, video, README demo section, Devpost still open.
+2. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
+3. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
+4. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
+5. 2026-10-28: E2E `tests/e2e/flow.spec.ts` mocks `/api/read` with `page.route` and fixes the clock with `page.clock`; safety suite now also scans the UI strings in `page.tsx`.
+6. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
+7. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
+8. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
+9. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
+10. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
+11. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
+12. 2026-10-28: Initial scaffold, community files, README author line.
 
 ## 4. Open questions and assumptions
 
