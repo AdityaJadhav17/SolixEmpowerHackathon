@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Stack not chosen yet: each step runs only once its manifest exists.
+      - name: Set up Node
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Node install, lint, test, build
+        if: hashFiles('package.json') != ''
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          npm run lint --if-present
+          npm test --if-present
+          npm run build --if-present
+
+      - name: Set up Python
+        if: hashFiles('requirements.txt', 'pyproject.toml') != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python install and test
+        if: hashFiles('requirements.txt', 'pyproject.toml') != ''
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f pyproject.toml ]; then pip install -e .; fi
+          pip install pytest
+          pytest || [ $? -eq 5 ]  # exit 5 = no tests collected yet
