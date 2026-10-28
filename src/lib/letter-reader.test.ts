@@ -1,6 +1,6 @@
 import { APIError } from "@anthropic-ai/sdk";
 import type { Message } from "@anthropic-ai/sdk/resources/messages";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import fixture from "../../tests/fixtures/reader/synthetic-work-requirement.json";
 import { createLetterReader, readLetter, UNSURE_RESULT } from "./letter-reader";
 
@@ -19,6 +19,10 @@ const apiError = (status: number) =>
   APIError.generate(status, undefined, "fake", new Headers());
 
 describe("readLetter", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("returns the parsed extraction when the model output matches the schema", async () => {
     const read = createLetterReader(async () => reply(JSON.stringify(fixture)));
     expect(await read(IMAGE)).toMatchObject({
@@ -38,6 +42,10 @@ describe("readLetter", () => {
       { content: [], stop_reason: "end_turn" } as unknown as Message,
     ],
     ["a refusal", reply("", "refusal")],
+    [
+      "output cut off at max_tokens",
+      reply('{"notice_type":"renewal","summ', "max_tokens"),
+    ],
   ])("returns the unsure result on %s (US-013)", async (_, message) => {
     const read = createLetterReader(async () => message);
     expect(await read(IMAGE)).toEqual(UNSURE_RESULT);
@@ -76,6 +84,5 @@ describe("readLetter", () => {
   it("returns the recorded fixture in fixture mode", async () => {
     vi.stubEnv("LETTER_READER", "fixture");
     expect((await readLetter(IMAGE)).deadline).toBe("2027-02-15");
-    vi.unstubAllEnvs();
   });
 });

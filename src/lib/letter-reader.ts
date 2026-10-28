@@ -51,7 +51,8 @@ export function createLetterReader(
   return async (image) => {
     const params: MessageCreateParamsNonStreaming = {
       model: MODEL_ID,
-      max_tokens: 2048,
+      // Thinking tokens count toward this on claude-opus-5-5; too low truncates the JSON.
+      max_tokens: 16000,
       system: LETTER_READER_SYSTEM_PROMPT,
       output_config: {
         effort: "medium",
@@ -84,7 +85,7 @@ export function createLetterReader(
       message = await create(params);
     }
 
-    if (message.stop_reason === "refusal") return UNSURE_RESULT;
+    if (message.stop_reason !== "end_turn") return UNSURE_RESULT;
     const text = message.content.find((b) => b.type === "text")?.text;
     if (!text) return UNSURE_RESULT;
     try {
@@ -104,9 +105,10 @@ export const readLetter: LetterReader = async (image) => {
       JSON.parse(readFileSync(FIXTURE_PATH, "utf8")),
     );
   }
-  // maxRetries 0: we do our own single retry on 429/5xx only.
   if (!live) {
-    const client = new Anthropic({ maxRetries: 0 });
+    // maxRetries 0: we do our own single retry on 429/5xx only.
+    // 30 s timeout so a stuck call reaches the 502 + phone message (SDK default is 10 min).
+    const client = new Anthropic({ maxRetries: 0, timeout: 30_000 });
     live = createLetterReader((params) => client.messages.create(params));
   }
   return live(image);
