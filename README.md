@@ -1,6 +1,8 @@
 # SolixEmpowerHackathon
 
 **Author:** Woosik Kim
+**Author:** Aditya Jadhav
+**Author:** Waleed Alghaithi
 
 Our project for the Solix Empower Hackathon.
 
