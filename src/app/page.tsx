@@ -406,6 +406,10 @@ function Screening({ onDone }: { onDone: (yes: string[]) => void }) {
       <p className="lead">
         Answer what you can. Skip any question you don&apos;t want to answer.
       </p>
+      <p>
+        These questions use Oregon Health Plan (OHP) rules. If your letter is
+        from another state, call the number on your letter.
+      </p>
       {rules.exemptions.map((rule) => (
         <fieldset key={rule.id} className="question">
           <legend>{rule.question}</legend>
