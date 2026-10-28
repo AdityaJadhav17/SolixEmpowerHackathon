@@ -8,6 +8,8 @@ _2026-10-28 15:00 PDT._ Letter reader backend is in (branch `eng-a`): `readLette
 
 Eng C update (2026-10-28 ~14:45 PDT): PR #4 (`eval/dataset`) adds 10 labeled public .gov sample notices (page 1 of each PDF; 3 Oregon, 7 Vermont; 4 dev, 6 test; split fixed before any run). Only 3 true Oregon sample notices exist online, so Vermont fills the rest. Dev run (prompt v1): deadline 4 of 4, notice type 4 of 4, required action 1 of 4 (strict token-subset metric, labels are long phrases), doc recall 0.75, precision 0.63, guardrail hits 0. **Test split NOT run yet:** waiting for the 3 phone photos of printed samples so the test run happens once on the full set. Photos still needed from a human with an iPhone (print any `eval/letters/*.png`, save as `<id>-photo.jpg` with location stripped, add labels).
 
+Eng C update 2 (~14:50 PDT): required_action labels shortened to 2-4 key words (all splits); `eval/run.ts` now reports "Printed deadline read correctly" and "No deadline correctly reported as none" (stage claim uses the first); `deadlineSplit` unit-tested. Dev re-run: printed deadline 2 of 2, none 2 of 2, type 4 of 4, action 2 of 4, doc recall 1.00, precision 0.88, guardrail 0. Test still NOT run: the 3 iPhone photos from Eng B are not in the repo or on this machine yet.
+
 ## 2. Current task and next 3 actions
 
 Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mvp.md) milestones).

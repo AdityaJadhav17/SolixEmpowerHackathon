@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { deadlineMatches, documentScores, textMatches } from "./score";
+import {
+  deadlineMatches,
+  deadlineSplit,
+  documentScores,
+  textMatches,
+} from "./score";
 
 describe("deadlineMatches", () => {
   it.each([
@@ -54,6 +59,21 @@ describe("documentScores", () => {
     expect(documentScores([], ["Photo ID"])).toEqual({
       precision: 0,
       recall: 1,
+    });
+  });
+});
+
+describe("deadlineSplit", () => {
+  it("separates printed-date labels from null labels", () => {
+    expect(
+      deadlineSplit([
+        { expected: "2026-01-01", correct: true },
+        { expected: "2026-02-01", correct: false },
+        { expected: null, correct: true },
+      ]),
+    ).toEqual({
+      printed: { correct: 1, total: 2 },
+      none: { correct: 1, total: 1 },
     });
   });
 });
