@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Eval labels",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "file",
+      "split",
+      "notice_type",
+      "deadline",
+      "required_action",
+      "documents",
+      "source_url",
+      "retrieved",
+      "usage_note"
+    ],
+    "properties": {
+      "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "file": {
+        "type": "string",
+        "description": "Path relative to eval/letters/"
+      },
+      "split": { "enum": ["dev", "test"] },
+      "notice_type": { "type": "string" },
+      "deadline": { "type": ["string", "null"], "format": "date" },
+      "required_action": { "type": ["string", "null"] },
+      "documents": { "type": "array", "items": { "type": "string" } },
+      "source_url": {
+        "type": "string",
+        "pattern": "^https://([a-z0-9-]+\\.)*[a-z0-9-]+\\.gov/"
+      },
+      "retrieved": { "type": "string", "format": "date" },
+      "usage_note": { "type": "string" }
+    }
+  }
+}

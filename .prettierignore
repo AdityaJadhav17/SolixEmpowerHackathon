@@ -1,0 +1,8 @@
+.next
+coverage
+playwright-report
+test-results
+eval/results
+eval/letters
+package-lock.json
+next-env.d.ts

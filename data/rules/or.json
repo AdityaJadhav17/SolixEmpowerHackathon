@@ -1,0 +1,72 @@
+{
+  "state": "OR",
+  "program": "Oregon Health Plan (OHP)",
+  "source_url": "https://www.oregon.gov/oha/hsd/ohp/pages/federal-changes.aspx",
+  "source_updated": "2026-09-18",
+  "retrieved": "2026-10-28",
+  "contact": { "name": "OHP Customer Service", "phone": "800-699-9075" },
+  "applies_to": "Some adults ages 19-64 when they apply for or renew OHP, starting in 2027.",
+  "ways_to_meet": [
+    {
+      "id": "income",
+      "text": "Household income above $580 a month before taxes and deductions."
+    },
+    {
+      "id": "school",
+      "text": "Enrolled in school at least half-time, including high school or GED programs."
+    },
+    {
+      "id": "hours",
+      "text": "At least 80 hours a month of work, volunteering, caregiving, school, or a training or work program."
+    }
+  ],
+  "exemptions": [
+    { "id": "aian", "question": "Are you American Indian or Alaska Native?" },
+    {
+      "id": "pregnant",
+      "question": "Are you pregnant or were you recently pregnant?"
+    },
+    { "id": "child_under_14", "question": "Do you care for a child under 14?" },
+    {
+      "id": "caregiver",
+      "question": "Do you care for someone with a disability or serious health condition for at least 80 hours a month?"
+    },
+    {
+      "id": "health_condition",
+      "question": "Do you have a serious or disabling health condition?"
+    },
+    {
+      "id": "veteran_100",
+      "question": "Are you a veteran with a 100% VA disability rating?"
+    },
+    {
+      "id": "inpatient",
+      "question": "Are you in inpatient or residential care?"
+    },
+    {
+      "id": "medical_travel",
+      "question": "Were you away from home 7 or more days this month for medical care?"
+    },
+    {
+      "id": "sud_treatment",
+      "question": "Have you been in drug or alcohol treatment in the past 5 years?"
+    },
+    { "id": "medicare", "question": "Do you have Medicare?" },
+    {
+      "id": "recent_release",
+      "question": "Were you recently released from jail or prison?"
+    },
+    {
+      "id": "snap_tanf",
+      "question": "Are you meeting SNAP or TANF work rules?"
+    },
+    {
+      "id": "former_foster",
+      "question": "Are you a former foster youth age 19-26?"
+    },
+    {
+      "id": "area",
+      "question": "Do you live in a high-unemployment county or a federally declared disaster area?"
+    }
+  ]
+}
