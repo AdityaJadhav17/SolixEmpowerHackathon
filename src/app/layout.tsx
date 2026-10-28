@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Atkinson_Hyperlegible } from "next/font/google";
 import type { ReactNode } from "react";
+import "./globals.css";
+
+// Designed for low-vision readers; fits users reading dense government letters.
+const font = Atkinson_Hyperlegible({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Coverage Keeper",
@@ -7,16 +15,16 @@ export const metadata: Metadata = {
     "Understand your Medicaid letter: what it asks, the deadline, and what to send.",
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1 };
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#ffffff",
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body
-        style={{ fontFamily: "system-ui, sans-serif", margin: 0, padding: 16 }}
-      >
-        {children}
-      </body>
+      <body className={font.className}>{children}</body>
     </html>
   );
 }

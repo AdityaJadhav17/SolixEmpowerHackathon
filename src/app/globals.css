@@ -1,0 +1,327 @@
+:root {
+  --ink: #14325c; /* letterhead navy */
+  --text: #1a1f29;
+  --muted: #4a5568;
+  --paper: #ffffff;
+  --rule: #c9d2de;
+  --mark: #ffe066; /* highlighter on quoted letter text */
+  --urgent: #a51d12;
+  --urgent-bg: #fdecea;
+  --focus: #0b5fd6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-size: 1.125rem;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 1rem 1rem calc(6rem + env(safe-area-inset-bottom));
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ink);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.brand {
+  font-size: 1rem;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--ink);
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+  margin: 1.75rem 0 0.25rem;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.lead {
+  font-size: 1.2rem;
+}
+
+.kind {
+  color: var(--muted);
+  margin: 0 0 0.25rem;
+}
+
+a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.facts {
+  padding-left: 1.25rem;
+  margin: 0 0 1.5rem;
+}
+
+.facts li {
+  margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.15rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.secondary {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.primary:active,
+.secondary:active {
+  transform: translateY(1px);
+}
+
+.actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+/* File picker: visually hidden input inside a button-styled label. */
+.pick input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.pick:has(input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.alert {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--urgent);
+  background: var(--urgent-bg);
+  color: var(--urgent);
+  font-weight: 700;
+}
+
+.reading {
+  font-size: 1.25rem;
+  padding: 1.5rem 0;
+}
+
+.reading::before {
+  content: "";
+  display: block;
+  height: 6px;
+  margin-bottom: 1rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--ink) 30%, var(--rule) 30%);
+  background-size: 200% 100%;
+  animation: progress 1.4s linear infinite;
+}
+
+@keyframes progress {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading::before {
+    animation: none;
+  }
+}
+
+/* Deadline: the one loud element. */
+.deadline {
+  margin: 1.5rem 0;
+  padding: 1rem 1rem 0.5rem;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+}
+
+.deadline h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.deadline .date {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.deadline .big {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0.25rem 0 0.75rem;
+}
+
+.deadline.passed {
+  border-color: var(--urgent);
+  background: var(--urgent-bg);
+}
+
+.deadline.passed .big {
+  color: var(--urgent);
+  font-size: 1.75rem;
+}
+
+.deadline.unknown .big {
+  font-size: 1.5rem;
+}
+
+blockquote {
+  margin: 0 0 0.75rem;
+  font-style: italic;
+}
+
+mark {
+  background: var(--mark);
+  color: var(--text);
+  padding: 0.05em 0.2em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Checklist and yes/no answers: whole row is the touch target. */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist label,
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.checklist input,
+.question input {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  accent-color: var(--ink);
+}
+
+.checklist li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.question {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2rem;
+}
+
+.question legend {
+  float: left;
+  width: 100%;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.question + .primary {
+  margin-top: 1rem;
+}
+
+.matches {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.matches li {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  border-left: 6px solid var(--mark);
+  background: #fffbe6;
+}
+
+.matches .q {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.source {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+/* Who to call: on every screen (US-054). */
+.callbar {
+  position: fixed;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+}
+
+.callbar a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 0.5rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
