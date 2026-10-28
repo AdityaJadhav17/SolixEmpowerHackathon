@@ -1,1 +1,3 @@
 # SolixEmpowerHackathon
+
+**Author:** Woosik Kim
