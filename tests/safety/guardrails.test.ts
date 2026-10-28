@@ -40,4 +40,12 @@ describe("shipped text contains no eligibility claims", () => {
       findForbiddenClaims(readFileSync(path.join(fixtureDir, file), "utf8")),
     ).toEqual([]);
   });
+
+  it("fixed UI strings in the app screens", () => {
+    const ui = readFileSync(
+      path.join(__dirname, "..", "..", "src", "app", "page.tsx"),
+      "utf8",
+    );
+    expect(findForbiddenClaims(ui)).toEqual([]);
+  });
 });
