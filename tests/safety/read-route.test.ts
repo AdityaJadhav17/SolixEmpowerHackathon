@@ -23,6 +23,11 @@ describe("route output guardrail (US-050, US-052)", () => {
 
     expect(body.summary).toBe(SAFE_FALLBACK);
     expect(body.required_action).toBe(SAFE_FALLBACK);
+    expect(body.deadline_quote).toBe(SAFE_FALLBACK);
+    expect(body.documents).toEqual([
+      "Pay stubs for January 2027",
+      SAFE_FALLBACK,
+    ]);
     expect(findForbiddenClaims(JSON.stringify(body))).toEqual([]);
   });
 });

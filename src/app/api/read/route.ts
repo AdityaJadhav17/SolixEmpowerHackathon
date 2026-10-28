@@ -38,20 +38,22 @@ export async function POST(req: Request) {
       mediaType: image.type as LetterImage["mediaType"],
       base64: Buffer.from(await image.arrayBuffer()).toString("base64"),
     });
-    const summary = enforceGuardrail(result.summary);
-    const action = result.required_action
-      ? enforceGuardrail(result.required_action)
-      : null;
-    log({
-      status: 200,
-      ms: Date.now() - started,
-      blocked: summary.blocked || Boolean(action?.blocked),
-    });
-    return Response.json({
+    // Every user-facing string, including text copied from the letter (ADR-0005).
+    let blocked = false;
+    const guard = (text: string) => {
+      const out = enforceGuardrail(text);
+      blocked ||= out.blocked;
+      return out.text;
+    };
+    const safe = {
       ...result,
-      summary: summary.text,
-      required_action: action?.text ?? null,
-    });
+      summary: guard(result.summary),
+      required_action: result.required_action && guard(result.required_action),
+      deadline_quote: result.deadline_quote && guard(result.deadline_quote),
+      documents: result.documents.map(guard),
+    };
+    log({ status: 200, ms: Date.now() - started, blocked });
+    return Response.json(safe);
   } catch (err) {
     log({
       status: 502,
