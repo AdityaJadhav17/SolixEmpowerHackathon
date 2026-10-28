@@ -325,3 +325,41 @@ mark {
   font-weight: 700;
   font-size: 1.25rem;
 }
+
+/* Doctor note draft (US-040, US-041). */
+.draft-open {
+  margin-top: 1.5rem;
+}
+
+.draft {
+  margin-top: 1.5rem;
+}
+
+.draft label {
+  display: block;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.draft textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--rule);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 1rem; /* 16px+ stops iOS zoom on focus */
+  color: var(--text);
+  background: var(--paper);
+}
+
+.draft .actions {
+  margin-top: 0.75rem;
+}
+
+.copied {
+  min-height: 1.55em;
+  margin-top: 0.5rem;
+  font-weight: 700;
+  color: var(--ink);
+}
