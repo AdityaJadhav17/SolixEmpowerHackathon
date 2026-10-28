@@ -71,9 +71,9 @@ Details: [docs/safety-and-privacy.md](docs/safety-and-privacy.md), [ADR-0004 pri
 
 ## Evaluation
 
-**Method.** The eval set is 13 labeled images: 10 public sample notices from state `.gov` sites (3 Oregon, 7 Vermont; page 1 of each PDF) and 3 phone photos. We fixed the split before any run: 4 dev, 9 test. The test split ran once, with `claude-opus-5-5` and prompt v1, and nobody tuned the prompt on test failures. Scoring rules are in [docs/eval.md](docs/eval.md).
+**Method.** The eval set is 13 labeled images: 10 public sample notices from state `.gov` sites (3 Oregon, 7 Vermont; page 1 of each PDF) and 3 phone photos. We fixed the split before any run: 4 dev, 9 test. The test split ran with `claude-opus-5-5` and prompt v1 [5], then again after the prompt v2 fix [6]. Nobody tuned the prompt on test failures. Scoring rules are in [docs/eval.md](docs/eval.md).
 
-**Results (test split, 9 letters: 6 PDF renders + 3 phone photos)** [5]
+**Results (test split, 9 letters: 6 PDF renders + 3 phone photos).** Prompt v1 and prompt v2 produced the same numbers and the same failures.
 
 | Metric                                 | Result |
 | -------------------------------------- | ------ |
@@ -94,7 +94,6 @@ Details: [docs/safety-and-privacy.md](docs/safety-and-privacy.md), [ADR-0004 pri
 - Only page 1 of each notice is read.
 - The 3 phone photos show a screen, not printed paper.
 - 2 of the 3 photos (`vt-201p`, `vt-ee307`) show letters whose PDF versions are in the dev split.
-- The live app runs prompt v2, which changed how a missing deadline affects confidence. The eval has not been re-run on v2.
 
 ## Tech stack
 
@@ -196,8 +195,9 @@ Every pull request must pass hygiene and secret scan, dependency audit and licen
 2. KFF, How Did Medicaid Renewal Outcomes Change During the Unwinding?: https://www.kff.org/policy-watch/how-did-medicaid-renewal-outcomes-change-during-the-unwinding/
 3. KFF Health News, 2026-06-12: https://kffhealthnews.org/medicaid/medicaid-work-requirements-final-rules-exemptions-trump-cms/
 4. Oregon Health Authority, Federal changes to OHP (updated 2026-09-18): https://www.oregon.gov/oha/hsd/ohp/pages/federal-changes.aspx
-5. Test split results, pull request #7: https://github.com/AdityaJadhav17/coverage-keeper/pull/7
-6. Sample notices used for evaluation: Oregon Health Authority and Vermont Department of Vermont Health Access. Each file's source URL is in [`eval/labels.json`](eval/labels.json).
+5. Test split results, prompt v1, pull request #7: https://github.com/AdityaJadhav17/coverage-keeper/pull/7
+6. Test split results, prompt v2, pull request #13: https://github.com/AdityaJadhav17/coverage-keeper/pull/13#issuecomment-6483248906
+7. Sample notices used for evaluation: Oregon Health Authority and Vermont Department of Vermont Health Access. Each file's source URL is in [`eval/labels.json`](eval/labels.json).
 
 ## Disclaimer
 
