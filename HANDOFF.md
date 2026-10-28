@@ -9,6 +9,7 @@ _2026-10-28 15:20 PDT._ **Backend and UI both exist; UI awaits merge (PR #3, `fe
 - Backend (Eng A, merged via PR #2): `readLetter` calls `claude-opus-5-5` (effort medium, structured output via `zodOutputFormat`), falls back to a low-confidence "unsure" result on refusal/empty/invalid output, retries once on 429/5xx. `POST /api/read` takes multipart `image` (jpeg/png/webp, max 4 MB), applies the guardrail to every user-facing string (`summary`, `required_action`, `deadline_quote`, each of `documents`); model call has `max_tokens` 16000 (thinking counts toward it) and a 30 s timeout, logs only status/latency/model/error class. `LETTER_READER=fixture` returns the recorded fixture with no network. One real call on a synthetic notice returned schema-valid JSON in ~6 s.
 - UI (Eng B, PR #3): consent → capture → result (summary, deadline + days left + highlighted quote, checklist, who to call) → exemption screening, plus offline, error, low-confidence and not-OHP screens. Low confidence is checked before `notice_type`, per Eng A's contract. Pure logic in `src/lib/deadline.ts`, `screening.ts`, `image.ts`, `phone.ts`. E2E mocks `/api/read`. Not yet checked on a real iPhone.
 - Locally green on `feat/ui-flow` after rebase: lint, format, typecheck, unit (103), integration (7), safety (15), build, E2E (22 = 11 × iPhone + Android), hygiene.
+- Security audit (Eng D, ~15:45 PDT): one High finding, H1: `/api/read` had no auth or rate limit, so anyone with the URL could spend the API budget. PR `fix/read-rate-limit` adds a per-IP limit of 10 reads/min (429 with the OHP phone number) and rejects a declared body over ~4.06 MB before buffering it. The limit is per server instance, so it's a speed bump only. **Owner action still needed:** set a spend limit on the Anthropic workspace and add a Vercel Firewall rate-limit rule on `/api/read`. Low items not fixed yet: eval.yml key exposed to `npm ci` scripts, Vercel token set job-wide, no security headers.
 - `eval/labels.json` still empty. ADRs still **Proposed**. Deadline: **18:00 PDT today** (Devpost).
 
 Eng D update (2026-10-28 ~15:15 PDT): PR `feat/doctor-draft` adds US-040/US-041. After screening, if "health_condition" was answered yes, "Draft a note to my doctor" opens an editable textarea with a template note (no LLM): asks the doctor for a statement on whether a health condition limits work/activities for 80 hours a month, includes the letter deadline if known, a `[describe your condition in your own words]` placeholder, and the OHP source URL. Copy (clipboard) and Share (only if `navigator.share` exists). Nothing sent or stored. Copy failure shows "Couldn't copy. Press and hold the text to copy it." (review fix). Locally green: lint, format, typecheck, unit (113), integration (7), safety (18), build, E2E (28). Hard stop: merged with green CI by 17:00 PDT or dropped.
@@ -23,26 +24,27 @@ Eng C update 3 (~15:10 PDT): 3 phone photos added (`*-photo.jpg`, test split; no
 
 Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mvp.md) milestones).
 
-1. **Eng A:** (PR #2 merged) run `npm run eval` once Eng C has labels. API contract for Eng B: `POST /api/read` (form field `image`) returns `LetterExtraction` JSON on 200, or `{ error }` on 400/413/502 (502 message includes the OHP phone). When `confidence` is `"low"`, show the "we couldn't read this" state and ignore `notice_type` (the unsure result uses `other_medicaid` even for non-letters).
+1. **Eng A:** (PR #2 merged) run `npm run eval` once Eng C has labels. API contract for Eng B: `POST /api/read` (form field `image`) returns `LetterExtraction` JSON on 200, or `{ error }` on 400/413/429/502 (502 message includes the OHP phone). When `confidence` is `"low"`, show the "we couldn't read this" state and ignore `notice_type` (the unsure result uses `other_medicaid` even for non-letters).
 2. **Eng B:** review + merge `feat/ui-flow`; run `npm run dev` with `LETTER_READER=fixture` and test the flow on a real iPhone on the same Wi-Fi (`http://<laptop-ip>:3000`).
 3. **Eng D:** get `feat/doctor-draft` reviewed and merged by 17:00 PDT; test Copy/Share on a real iPhone.
 4. **Eng C:** collect 10-15 public Oregon sample notices into `eval/letters/` (PNG/JPEG; convert PDF pages), label them in `eval/labels.json`, take 3 phone photos of printed samples. Then the video and Devpost write-up.
 
 ## 3. Recent changes (newest first)
 
-0. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
-1. 2026-10-28: Eng C: eval dataset (10 notices + 3 phone photos), dev and test runs done. Video, README demo section, Devpost still open.
-2. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
-3. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
-4. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
-5. 2026-10-28: E2E `tests/e2e/flow.spec.ts` mocks `/api/read` with `page.route` and fixes the clock with `page.clock`; safety suite now also scans the UI strings in `page.tsx`.
-6. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
-7. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
-8. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
-9. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
-10. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
-11. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
-12. 2026-10-28: Initial scaffold, community files, README author line.
+0. 2026-10-28: Eng D: `/api/read` rate limit (`src/lib/rate-limit.ts`, 10/min per `x-forwarded-for` IP) + Content-Length cap, with unit and integration tests (security audit H1, L1).
+1. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
+2. 2026-10-28: Eng C: eval dataset (10 notices + 3 phone photos), dev and test runs done. Video, README demo section, Devpost still open.
+3. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
+4. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
+5. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
+6. 2026-10-28: E2E `tests/e2e/flow.spec.ts` mocks `/api/read` with `page.route` and fixes the clock with `page.clock`; safety suite now also scans the UI strings in `page.tsx`.
+7. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
+8. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
+9. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
+10. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
+11. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
+12. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
+13. 2026-10-28: Initial scaffold, community files, README author line.
 
 ## 4. Open questions and assumptions
 
