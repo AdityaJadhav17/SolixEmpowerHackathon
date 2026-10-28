@@ -35,23 +35,23 @@ Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mv
 ## 3. Recent changes (newest first)
 
 0. 2026-10-28: Eng D: prompt v2: a missing or placeholder deadline no longer forces `confidence: "low"` (`src/prompts/letter-reader.ts`).
-0. 2026-10-28: Eng D: the screening intro now says the questions use Oregon (OHP) rules, and people with another state's letter should call the number on it (`fix/state-scope`).
-1. 2026-10-28: Eng B: copy pass (plain, OHP-specific), SEO metadata/OG image/robots/sitemap/icon, inline CSS, screen fade starts at 0.5 opacity so LCP counts the first paint.
-2. 2026-10-28: Eng D: `/api/read` rate limit (`src/lib/rate-limit.ts`, 10/min per `x-forwarded-for` IP) + Content-Length cap, with unit and integration tests (security audit H1, L1).
-3. 2026-10-28: Eng B: UI polish (PR #8, merged 15:47 with all CI green) in `globals.css`: native mobile fixes, deadline hero with status icons, motion with reduced-motion off switch, dark mode; `viewport-fit=cover` + per-scheme `themeColor`; E2E dark-mode axe check, a11y helper waits for fade-ins.
-4. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
-5. 2026-10-28: Eng C: eval dataset (10 notices + 3 phone photos), dev and test runs done. Video, README demo section, Devpost still open.
-6. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
-7. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
-8. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
-9. 2026-10-28: E2E `tests/e2e/flow.spec.ts` mocks `/api/read` with `page.route` and fixes the clock with `page.clock`; safety suite now also scans the UI strings in `page.tsx`.
-10. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
-11. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
-12. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
-13. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
-14. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
-15. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
-16. 2026-10-28: Initial scaffold, community files, README author line.
+1. 2026-10-28: Eng D: the screening intro now says the questions use Oregon (OHP) rules, and people with another state's letter should call the number on it (`fix/state-scope`).
+2. 2026-10-28: Eng B: copy pass (plain, OHP-specific), SEO metadata/OG image/robots/sitemap/icon, inline CSS, screen fade starts at 0.5 opacity so LCP counts the first paint.
+3. 2026-10-28: Eng D: `/api/read` rate limit (`src/lib/rate-limit.ts`, 10/min per `x-forwarded-for` IP) + Content-Length cap, with unit and integration tests (security audit H1, L1).
+4. 2026-10-28: Eng B: UI polish (PR #8, merged 15:47 with all CI green) in `globals.css`: native mobile fixes, deadline hero with status icons, motion with reduced-motion off switch, dark mode; `viewport-fit=cover` + per-scheme `themeColor`; E2E dark-mode axe check, a11y helper waits for fade-ins.
+5. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
+6. 2026-10-28: Eng C: eval dataset (10 notices + 3 phone photos), dev and test runs done. Video, README demo section, Devpost still open.
+7. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
+8. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
+9. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
+10. 2026-10-28: E2E `tests/e2e/flow.spec.ts` mocks `/api/read` with `page.route` and fixes the clock with `page.clock`; safety suite now also scans the UI strings in `page.tsx`.
+11. 2026-10-28: PR #2 review fixes: guardrail on `deadline_quote` and `documents`, `max_tokens` 16000 with non-`end_turn` stop treated as unsure, 30 s SDK timeout, lockfile regenerated with npm 10.
+12. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
+13. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
+14. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
+15. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
+16. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
+17. 2026-10-28: Initial scaffold, community files, README author line.
 
 ## 4. Open questions and assumptions
 
