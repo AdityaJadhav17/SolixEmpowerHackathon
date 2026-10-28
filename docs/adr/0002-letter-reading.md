@@ -1,6 +1,6 @@
 # ADR-0002: Letter reading approach
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-10-28
 
 ## Context and problem statement
