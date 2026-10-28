@@ -1,1 +1,122 @@
-[]
+[
+  {
+    "id": "or-outreach-work-rules",
+    "file": "or-outreach-work-rules.png",
+    "split": "dev",
+    "notice_type": "work_requirement_info",
+    "deadline": null,
+    "required_action": "Check if you do not need to meet the rules",
+    "documents": [],
+    "source_url": "https://www.oregon.gov/oha/HSD/OHP/OHPLetters/ONE-Outreach-Notice-EN.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Oregon; renewal date shown as <MM/DD/YYYY> placeholder)"
+  },
+  {
+    "id": "vt-ee307-renewal-ending",
+    "file": "vt-ee307-renewal-ending.png",
+    "split": "dev",
+    "notice_type": "coverage_ending",
+    "deadline": "2023-02-28",
+    "required_action": "Renew before it ends; we must get your renewal form",
+    "documents": ["renewal form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/doc_library/Sample%20EE307.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont)"
+  },
+  {
+    "id": "vt-205ifar-renew",
+    "file": "vt-205ifar-renew.png",
+    "split": "dev",
+    "notice_type": "renewal",
+    "deadline": null,
+    "required_action": "Sign and return the paper renewal form",
+    "documents": ["renewal form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/205IFAR-sample.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont; sample shows conflicting dates (Respond by December 12, 2026 vs September 12, 2022), labeled ambiguous)"
+  },
+  {
+    "id": "vt-201p-review-reminder",
+    "file": "vt-201p-review-reminder.png",
+    "split": "dev",
+    "notice_type": "renewal",
+    "deadline": "2020-01-01",
+    "required_action": "Complete, sign and return the enclosed form",
+    "documents": ["review form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/201P-Review-short-sample.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont)"
+  },
+  {
+    "id": "or-med005-eligibility",
+    "file": "or-med005-eligibility.png",
+    "split": "test",
+    "notice_type": "approval_or_change",
+    "deadline": null,
+    "required_action": null,
+    "documents": [],
+    "source_url": "https://www.oregon.gov/oha/HSD/OHP/OHPLetters/ONE-Transition-Notice-EN.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Oregon; page 1 only, no dated deadline (hearing request within 10 days of receipt))"
+  },
+  {
+    "id": "or-open-card-move",
+    "file": "or-open-card-move.png",
+    "split": "test",
+    "notice_type": "approval_or_change",
+    "deadline": null,
+    "required_action": null,
+    "documents": [],
+    "source_url": "https://www.oregon.gov/oha/HSD/OHP/OHPLetters/Open-Card-Notice-EN.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Oregon; informational, no deadline)"
+  },
+  {
+    "id": "vt-re005ep-renewal-decision",
+    "file": "vt-re005ep-renewal-decision.png",
+    "split": "test",
+    "notice_type": "approval_or_change",
+    "deadline": null,
+    "required_action": "Call 1-855-899-9600 within 10 days if the information is wrong",
+    "documents": [],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/doc_library/RE005EP%20Renewal%20NOD%20sample.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont; relative deadline (10 days of getting the notice), no date)"
+  },
+  {
+    "id": "vt-202med-review-reminder",
+    "file": "vt-202med-review-reminder.png",
+    "split": "test",
+    "notice_type": "renewal",
+    "deadline": "2024-08-01",
+    "required_action": "Complete, sign and return the enclosed form",
+    "documents": ["review form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/202MED-Review-short-sample.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont)"
+  },
+  {
+    "id": "vt-ee415-work-heads-up",
+    "file": "vt-ee415-work-heads-up.png",
+    "split": "test",
+    "notice_type": "work_requirement_info",
+    "deadline": null,
+    "required_action": null,
+    "documents": [],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/EE415-MM-HR1-Medicaid-Work-Requirements-Heads-Up.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont; informational, no deadline)"
+  },
+  {
+    "id": "vt-ee312-immigration-closure",
+    "file": "vt-ee312-immigration-closure.png",
+    "split": "test",
+    "notice_type": "coverage_ending",
+    "deadline": null,
+    "required_action": null,
+    "documents": [],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/EE312-MM-HR1-Immigration-Closure-English.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont; end date shown as EndDate placeholder)"
+  }
+]
