@@ -17,6 +17,8 @@ Eng C update (2026-10-28 ~14:45 PDT): PR #4 (`eval/dataset`) adds 10 labeled pub
 
 Eng C update 2 (~14:50 PDT): required_action labels shortened to 2-4 key words (all splits); `eval/run.ts` now reports "Printed deadline read correctly" and "No deadline correctly reported as none" (stage claim uses the first); `deadlineSplit` unit-tested. Dev re-run: printed deadline 2 of 2, none 2 of 2, type 4 of 4, action 2 of 4, doc recall 1.00, precision 0.88, guardrail 0. Test still NOT run: the 3 iPhone photos from Eng B are not in the repo or on this machine yet.
 
+Eng C update 3 (~15:10 PDT): 3 phone photos added (`*-photo.jpg`, test split; note they are photos of a screen, not of printed paper). Test split run ONCE (13 labeled letters total: 4 dev, 9 test), prompt v1: printed deadline 4 of 4, no deadline correctly none 5 of 5, notice type 8 of 9 (miss: vt-re005ep-renewal-decision), required action 6 of 9 (misses: or-med005-eligibility, vt-ee415-work-heads-up, vt-ee307-renewal-ending-photo), doc recall 1.00, precision 0.83, guardrail 0. Do not tune the prompt on these test failures. Still open: video, README Demo section, Devpost.
+
 ## 2. Current task and next 3 actions
 
 Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mvp.md) milestones).
@@ -29,7 +31,7 @@ Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mv
 ## 3. Recent changes (newest first)
 
 0. 2026-10-28: Eng D: doctor note draft (US-040, US-041): `src/lib/doctor-draft.ts` (`buildDoctorDraft`, template only, injected clock), `DoctorDraft` in the screened view of `page.tsx`, unit + safety + E2E (`tests/e2e/doctor-draft.spec.ts`). Answers Q3: in scope if merged by 17:00.
-1. 2026-10-28: Eng C: eval dataset (10 notices) + labels, dev eval run. Test run, photos, video, README demo section, Devpost still open.
+1. 2026-10-28: Eng C: eval dataset (10 notices + 3 phone photos), dev and test runs done. Video, README demo section, Devpost still open.
 2. 2026-10-28: PR #3 review fix: `phoneHref()` in `src/lib/phone.ts` dials the first full US number (ignores extensions/TTY), else `tel:+18006999075`. Before, `800-699-9075 (TTY 711)` dialed 699-907-5711.
 3. 2026-10-28: Mobile UI flow (`src/app/page.tsx`, `globals.css`, Atkinson Hyperlegible via `next/font`). Every model string goes through `enforceGuardrail`; results live in React state only. Bottom call bar on every screen uses the letter's phone, else 800-699-9075.
 4. 2026-10-28: `deadline.ts` (days left in America/Los_Angeles, fast-check property), `screening.ts` (rules answered yes may apply, no LLM), `image.ts` (reject non-image / >15 MB, re-encode to JPEG ≤ 2000 px and ≤ 2 MB).
