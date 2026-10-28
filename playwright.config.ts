@@ -12,7 +12,11 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
-  projects: [{ name: "mobile", use: { ...devices["Pixel 7"] } }],
+  projects: [
+    { name: "android", use: { ...devices["Pixel 7"] } },
+    // Demo phones are iPhones, so Safari (WebKit) must pass too.
+    { name: "iphone", use: { ...devices["iPhone 15"] } },
+  ],
   webServer: {
     // Runs against the production build, so `npm run build` must run first.
     command: `npx next start -p ${PORT}`,

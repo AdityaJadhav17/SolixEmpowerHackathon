@@ -38,7 +38,7 @@ Assumptions (unverified, check before relying on them):
 - Assumption: Oregon's rules in `data/rules/or.json` match the OHA page as retrieved 2026-10-28; Oregon may change details before 2027.
 - Assumption: the LLM provider does not train on API data and retains it only briefly. Verify the current terms before any real-user pilot.
 - Assumption: Vercel free tier fits (function body limit about 4.5 MB; images are downscaled in the browser).
-- Assumption: demo phones run current Chrome on Android.
+- Decided: demo phones are iPhones (Safari). Real users are assumed to be mostly on low-cost Android, so E2E runs on both (iPhone 15 and Pixel 7 profiles).
 
 ## 5. How to run, test, eval and deploy
 

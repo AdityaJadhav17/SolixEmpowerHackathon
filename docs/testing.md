@@ -117,7 +117,7 @@ vi.mock("@/lib/rules"); // mocks our own rules loader, so the test proves nothin
 ## E2E (Playwright)
 
 - Critical journeys only: photo to explanation, exemption screening, doctor draft (when built).
-- Project `mobile` uses the Pixel 7 device profile.
+- Projects `iphone` (iPhone 15, WebKit) and `android` (Pixel 7, Chromium). Demo phones are iPhones, so a WebKit failure blocks the demo.
 - Selectors: `getByRole` / `getByLabel`, else `data-testid`. Never CSS classes or text that changes.
 - No `waitForTimeout`; wait on locators and responses.
 - Trace and screenshot on first retry; uploaded by CI on failure.

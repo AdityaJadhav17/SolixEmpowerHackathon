@@ -8,7 +8,7 @@ Personas: [personas.md](personas.md). Priority uses MoSCoW. "MVP" means it ships
 As Marisol I want to take a photo of my letter so that I don't have to type anything.
 
 - Given the home screen, When I tap "Scan my letter", Then the phone camera opens (or the file picker on desktop).
-- Given I took a photo, When I confirm, Then it uploads downscaled to at most 2 MB and I see a progress state.
+- Given I took a photo, When I confirm, Then it is re-encoded in the browser as JPEG (so iPhone HEIC photos work), downscaled to at most 2 MB, uploaded, and I see a progress state.
 
 **US-003: Blurry or dark photo** — Must, MVP: yes
 As Marisol I want to be told when the photo is unreadable so that I retake it instead of trusting a bad answer.
