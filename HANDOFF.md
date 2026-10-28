@@ -4,23 +4,24 @@
 
 ## 1. Status
 
-_2026-10-28 13:50 PDT._ Docs, CI, eval scaffolding and a Next.js skeleton are in. No product features yet: `readLetter` throws "not implemented", the home page is static, `eval/labels.json` is empty. Locally green: lint, format, typecheck, unit (30), integration (3), safety (13), build, E2E (1), npm audit (0 vulns), license check, hygiene. The ADRs are **Proposed** and need team approval before building on them. Deadline: **18:00 PDT today** (Devpost).
+_2026-10-28 14:20 PDT._ Letter reader backend is in (branch `eng-a`): `readLetter` calls `claude-opus-5-5` (effort medium, structured output via `zodOutputFormat`), falls back to a low-confidence "unsure" result on refusal/empty/invalid output, retries once on 429/5xx. `POST /api/read` takes multipart `image` (jpeg/png/webp, max 4 MB), applies the guardrail to `summary` and `required_action`, logs only status/latency/model/error class. `LETTER_READER=fixture` returns the recorded fixture with no network. One real call on a synthetic notice returned schema-valid JSON in ~6 s. Home page still static; `eval/labels.json` still empty. Locally green: lint, typecheck, unit (44), integration (7), safety (14), build, hygiene. ADRs still **Proposed**. Deadline: **18:00 PDT today** (Devpost).
 
 ## 2. Current task and next 3 actions
 
 Current task: approve ADR-0001 to ADR-0009, then build the MVP ([mvp.md](docs/mvp.md) milestones).
 
-1. **Eng A:** implement `readLetter` in `src/lib/letter-reader.ts` with `@anthropic-ai/sdk` (structured output against `src/lib/schema.ts`), plus `POST /api/read` and a `LETTER_READER=fixture` mode. Stories US-010, US-012, US-013, US-052.
+1. **Eng A:** review/merge the `eng-a` PR; then run `npm run eval` once Eng C has labels. API contract for Eng B: `POST /api/read` (form field `image`) returns `LetterExtraction` JSON on 200, or `{ error }` on 400/413/502 (502 message includes the OHP phone).
 2. **Eng B:** mobile flow in `src/app/page.tsx`: consent → capture → result (summary, deadline + days left, checklist, phone) → exemption questions from `data/rules/or.json`. Stories US-001, US-003, US-005, US-020 to US-023, US-030, US-031, US-053 to US-055.
 3. **Eng C:** collect 10-15 public Oregon sample notices into `eval/letters/` (PNG/JPEG; convert PDF pages), label them in `eval/labels.json`, take 3 phone photos of printed samples. Then the video and Devpost write-up.
 
 ## 3. Recent changes (newest first)
 
-1. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
-2. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
-3. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
-4. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
-5. 2026-10-28: Initial scaffold, community files, README author line.
+1. 2026-10-28: `readLetter` (Anthropic SDK 1.3.0, structured output, unsure fallback, single 429/5xx retry, fixture mode) and `POST /api/read` with guardrail; unit, integration and safety tests incl. adversarial fixture `tests/fixtures/adversarial/eligible-summary.json`.
+2. 2026-10-28: Docs set (HANDOFF, personas, user stories, MVP, eval, safety, testing, CI, ADR-0000 to 0009).
+3. 2026-10-28: Next.js 16 + TypeScript skeleton; guardrail filter, schema, prompt v1, eval scoring + runner, Oregon rules data.
+4. 2026-10-28: CI split into `ci.yml`, `eval.yml`, `security.yml`; Dependabot; PR template.
+5. 2026-10-28: Ignore rules and `.git/info/exclude` for local tool config files; hygiene check in CI.
+6. 2026-10-28: Initial scaffold, community files, README author line.
 
 ## 4. Open questions and assumptions
 
