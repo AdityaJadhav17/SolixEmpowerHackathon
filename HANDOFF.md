@@ -8,6 +8,7 @@ _2026-10-28 15:20 PDT._ **Backend and UI both exist; UI awaits merge (PR #3, `fe
 
 - Backend (Eng A, merged via PR #2): `readLetter` calls `claude-opus-5-5` (effort medium, structured output via `zodOutputFormat`), falls back to a low-confidence "unsure" result on refusal/empty/invalid output, retries once on 429/5xx. `POST /api/read` takes multipart `image` (jpeg/png/webp, max 4 MB), applies the guardrail to every user-facing string (`summary`, `required_action`, `deadline_quote`, each of `documents`); model call has `max_tokens` 16000 (thinking counts toward it) and a 30 s timeout, logs only status/latency/model/error class. `LETTER_READER=fixture` returns the recorded fixture with no network. One real call on a synthetic notice returned schema-valid JSON in ~6 s.
 - UI (Eng B, PR #3): consent → capture → result (summary, deadline + days left + highlighted quote, checklist, who to call) → exemption screening, plus offline, error, low-confidence and not-OHP screens. Low confidence is checked before `notice_type`, per Eng A's contract. Pure logic in `src/lib/deadline.ts`, `screening.ts`, `image.ts`, `phone.ts`. E2E mocks `/api/read`. Not yet checked on a real iPhone.
+- Locally green on `feat/ui-flow` after rebase: lint, format, typecheck, unit (103), integration (7), safety (15), build, E2E (22 = 11 × iPhone + Android), hygiene.
 - `eval/labels.json` still empty. ADRs still **Proposed**. Deadline: **18:00 PDT today** (Devpost).
 
 ## 2. Current task and next 3 actions
