@@ -7,6 +7,11 @@ updates:
     groups:
       npm-dependencies:
         patterns: ["*"]
+    # Majors are upgraded by hand: eslint 10 breaks eslint-plugin-react, typescript 7 is
+    # outside typescript-eslint's range, and @types/node must track the Node 22 runtime.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     open-pull-requests-limit: 5
   - package-ecosystem: github-actions
     directory: /
