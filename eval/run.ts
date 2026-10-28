@@ -7,7 +7,12 @@ import {
   type LetterImage,
 } from "../src/lib/letter-reader";
 import { PROMPT_VERSION } from "../src/prompts/letter-reader";
-import { deadlineMatches, documentScores, textMatches } from "./score";
+import {
+  deadlineMatches,
+  deadlineSplit,
+  documentScores,
+  textMatches,
+} from "./score";
 
 type Label = {
   id: string;
@@ -81,6 +86,10 @@ const count = (key: "notice_type" | "deadline" | "required_action") =>
 const mean = (key: "doc_recall" | "doc_precision") =>
   ok.length ? ok.reduce((s, r) => s + r[key], 0) / ok.length : 0;
 
+const dl = deadlineSplit(
+  ok.map((r) => ({ expected: r.expected_deadline, correct: r.deadline })),
+);
+
 const summary = {
   run_at: new Date().toISOString(),
   model: MODEL_ID,
@@ -89,6 +98,8 @@ const summary = {
   letters: rows.length,
   errors: rows.length - ok.length,
   deadline_correct: count("deadline"),
+  deadline_printed: dl.printed,
+  deadline_none: dl.none,
   notice_type_correct: count("notice_type"),
   required_action_correct: count("required_action"),
   doc_recall_mean: mean("doc_recall"),
@@ -103,7 +114,8 @@ const md = [
   "",
   "| Metric | Result |",
   "| --- | --- |",
-  `| Deadline correct | ${summary.deadline_correct} of ${rows.length} |`,
+  `| Printed deadline read correctly | ${dl.printed.correct} of ${dl.printed.total} |`,
+  `| No deadline correctly reported as none | ${dl.none.correct} of ${dl.none.total} |`,
   `| Notice type correct | ${summary.notice_type_correct} of ${rows.length} |`,
   `| Required action correct | ${summary.required_action_correct} of ${rows.length} |`,
   `| Document recall (mean) | ${summary.doc_recall_mean.toFixed(2)} |`,

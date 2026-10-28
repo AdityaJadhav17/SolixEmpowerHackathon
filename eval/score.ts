@@ -67,3 +67,17 @@ export function documentScores(
     recall: expected.length === 0 ? 1 : matchedExpected / expected.length,
   };
 }
+
+// Stage claim uses `printed` (labels that have a date); `none` is reported separately.
+export function deadlineSplit(
+  rows: { expected: string | null; correct: boolean }[],
+) {
+  const tally = (group: typeof rows) => ({
+    correct: group.filter((r) => r.correct).length,
+    total: group.length,
+  });
+  return {
+    printed: tally(rows.filter((r) => r.expected !== null)),
+    none: tally(rows.filter((r) => r.expected === null)),
+  };
+}
