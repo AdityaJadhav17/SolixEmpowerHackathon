@@ -195,8 +195,7 @@ function Consent({ onAccept }: { onAccept: () => void }) {
         <li>We don&apos;t store your photo or your answers.</li>
         <li>This is not legal advice. Only the state decides your coverage.</li>
         <li>
-          You can always call OHP at{" "}
-          <a href={`tel:+1${OHP_PHONE.replace(/\D/g, "")}`}>{OHP_PHONE}</a>.
+          You can always call OHP. The number is at the bottom of every screen.
         </li>
       </ul>
       <button type="button" className="primary" onClick={onAccept}>
