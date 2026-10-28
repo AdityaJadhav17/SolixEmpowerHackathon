@@ -1,0 +1,51 @@
+name: Eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      split:
+        description: "Split to run (dev, test, or all)"
+        required: true
+        default: test
+        type: choice
+        options: [test, dev, all]
+  schedule:
+    - cron: "0 9 * * *" # 02:00 PDT
+
+permissions: {}
+
+concurrency:
+  group: eval
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    name: Labeled-letter eval (real model)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      SPLIT: ${{ inputs.split || 'test' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Run eval
+        run: |
+          if [ "$SPLIT" = "all" ]; then npm run eval; else npm run eval -- --split "$SPLIT"; fi
+      - name: Score table in job summary
+        if: always()
+        run: cat eval/results/latest.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || echo "No results produced." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: eval-results-${{ github.run_id }}
+          path: eval/results/
+          retention-days: 30
