@@ -118,5 +118,41 @@
     "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/EE312-MM-HR1-Immigration-Closure-English.pdf",
     "retrieved": "2026-10-28",
     "usage_note": "Public government sample notice, used for evaluation (page 1 of PDF; Vermont; end date shown as EndDate placeholder)"
+  },
+  {
+    "id": "vt-201p-review-reminder-photo",
+    "file": "vt-201p-review-reminder-photo.jpg",
+    "split": "test",
+    "notice_type": "renewal",
+    "deadline": "2020-01-01",
+    "required_action": "sign return form",
+    "documents": ["review form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/201P-Review-short-sample.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Phone photo of a screen showing the public government sample notice, used for evaluation (page 1 of PDF; Vermont)"
+  },
+  {
+    "id": "vt-202med-review-reminder-photo",
+    "file": "vt-202med-review-reminder-photo.jpg",
+    "split": "test",
+    "notice_type": "renewal",
+    "deadline": "2024-08-01",
+    "required_action": "sign return form",
+    "documents": ["review form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/documents/202MED-Review-short-sample.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Phone photo of a screen showing the public government sample notice, used for evaluation (page 1 of PDF; Vermont)"
+  },
+  {
+    "id": "vt-ee307-renewal-ending-photo",
+    "file": "vt-ee307-renewal-ending-photo.jpg",
+    "split": "test",
+    "notice_type": "coverage_ending",
+    "deadline": "2023-02-28",
+    "required_action": "return renewal form",
+    "documents": ["renewal form"],
+    "source_url": "https://dvha.vermont.gov/sites/dvha/files/doc_library/Sample%20EE307.pdf",
+    "retrieved": "2026-10-28",
+    "usage_note": "Phone photo of a screen showing the public government sample notice, used for evaluation (page 1 of PDF; Vermont)"
   }
 ]
