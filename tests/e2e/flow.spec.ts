@@ -35,6 +35,15 @@ const scan = (page: Page, file = PNG) =>
   page.getByLabel("Scan my letter").setInputFiles(file);
 
 async function expectNoSeriousA11yIssues(page: Page) {
+  // Screen fade-ins would otherwise be measured at half opacity.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
+  );
   const results = await new AxeBuilder({ page }).analyze();
   const serious = results.violations.filter(
     (v) => v.impact === "serious" || v.impact === "critical",
@@ -192,4 +201,24 @@ test("offline: photo is not sent and retry works", async ({
   await expect(
     page.getByRole("heading", { name: "What your letter says" }),
   ).toBeVisible();
+});
+
+test.describe("dark mode", () => {
+  test.use({ colorScheme: "dark" });
+
+  test("result and screening screens keep AA contrast", async ({ page }) => {
+    await mockReader(page, { ...fixture, deadline: "2027-02-01" });
+    await start(page);
+    await scan(page);
+    await expect(page.getByTestId("deadline")).toContainText("has passed");
+    await expectNoSeriousA11yIssues(page);
+    await page.getByRole("button", { name: "Check exemptions" }).click();
+    await page
+      .getByRole("group", { name: "Do you have Medicare?" })
+      .getByLabel("Yes")
+      .check();
+    await page.getByRole("button", { name: "See what may apply" }).click();
+    await expect(page.getByTestId("may-apply")).toHaveCount(1);
+    await expectNoSeriousA11yIssues(page);
+  });
 });
