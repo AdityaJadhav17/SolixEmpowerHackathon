@@ -36,3 +36,27 @@ venv/
 
 # Logs
 *.log
+
+# Test and eval output
+playwright-report/
+test-results/
+eval/results/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+
+# Local tool config (never commit; also enforced by scripts/check-hygiene.mjs)
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+GEMINI.md
+.claude/
+.claude-*
+.cursor/
+.cursorrules
+.windsurf/
+.aider*
+.mcp.json
+.copilot/
+skills/
+SKILL.md
