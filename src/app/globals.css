@@ -562,7 +562,7 @@ mark {
 .draft textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid var(--rule);
+  border: 2px solid var(--muted); /* 3:1 for form field edges */
   border-radius: 10px;
   font: inherit;
   font-size: 1rem; /* 16px+ stops iOS zoom on focus */
