@@ -5,9 +5,9 @@
 
 ## Decision outcome
 
-- GitHub Actions: `ci.yml` (PR and main gates), `eval.yml` (manual and nightly), `security.yml` (nightly audit). Details: [ci.md](../ci.md).
+- GitHub Actions: `ci.yml` (PR and main gates) and `security.yml` (nightly audit). The real-model eval is not in CI; it runs locally so CI never spends API credits. Details: [ci.md](../ci.md).
 - Hosting: Vercel free tier. Production deploys from `main` only, after all gates pass, via the Vercel CLI using the `VERCEL_TOKEN`, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` repo secrets. If the secrets are missing, the deploy job skips with a notice.
-- `ANTHROPIC_API_KEY` lives in Vercel environment variables, and as a GitHub secret used only by `eval.yml`.
+- `ANTHROPIC_API_KEY` lives only in Vercel environment variables and each developer's `.env.local`. It is not a GitHub secret.
 
 ### Consequences
 

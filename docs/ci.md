@@ -20,11 +20,9 @@ Cheap gates run in parallel; build waits for all of them; deploy waits for every
 | 10  | `sbom`              | SPDX SBOM artifact (anchore/sbom-action). No Dockerfile, so no container scan.                                                         | SBOM generation error                                                                                                                                                                                                                                                                                                           | —                                                                             |
 | 11  | `deploy`            | Vercel CLI production deploy, `main` push only, after all gates                                                                        | Vercel CLI error. Skips with a notice if `VERCEL_TOKEN` is unset.                                                                                                                                                                                                                                                               | —                                                                             |
 
-## `eval.yml` (manual dispatch only)
+## Real-model eval (not in CI)
 
-Runs `npm run eval` against the real model with `ANTHROPIC_API_KEY`, writes the score table to the job summary, uploads `eval/results/` as an artifact. Never runs on PRs (costs money, non-deterministic). It needs the `ANTHROPIC_API_KEY` repo secret; without it every letter errors and the job fails. Not scheduled, because each run spends API credits.
-
-Run locally: `ANTHROPIC_API_KEY=... npm run eval -- --split test`
+The eval calls the paid model, so it never runs in GitHub Actions and no API key is stored in GitHub. Run it locally when the prompt or model changes: `ANTHROPIC_API_KEY=... npm run eval -- --split test`. See [eval.md](eval.md).
 
 ## `security.yml` (nightly 02:30 PDT)
 
@@ -34,17 +32,16 @@ Run locally: `ANTHROPIC_API_KEY=... npm run eval -- --split test`
 
 - `permissions: {}` at workflow level; each job asks only for what it needs (`contents: read`, plus `pull-requests: read` for gitleaks).
 - Every third-party action is pinned to a full commit SHA with the tag in a comment. Dependabot updates them weekly.
-- `persist-credentials: false` on checkout. Secrets are only read in `deploy` and `eval`, never echoed.
+- `persist-credentials: false` on checkout. Secrets are only read in `deploy`, never echoed.
 - PR runs cancel older runs of the same PR. Every job has `timeout-minutes`.
 
 ## Secrets to add (repo Settings → Secrets and variables → Actions)
 
 | Secret                                               | Used by         |
 | ---------------------------------------------------- | --------------- |
-| `ANTHROPIC_API_KEY`                                  | `eval.yml`      |
 | `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` | `ci.yml` deploy |
 
-Also set `ANTHROPIC_API_KEY` in the Vercel project's environment variables, and create a `production` environment in GitHub (Settings → Environments).
+Set `ANTHROPIC_API_KEY` only in the Vercel project's environment variables (not in GitHub), and create a `production` environment in GitHub (Settings → Environments).
 
 ## Branch protection (Settings → Branches → Add rule for `main`)
 

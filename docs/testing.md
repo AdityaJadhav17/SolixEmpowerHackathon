@@ -52,7 +52,7 @@ it("works", async () => {
 - Never call the live model in unit, integration, safety or E2E tests. Use the `fixture` reader (`LETTER_READER=fixture`) or recorded responses in `tests/fixtures/reader/`.
 - Every model output is parsed with the zod schema (`src/lib/schema.ts`); tests cover invalid shapes.
 - Golden-file test for the prompt: `src/prompts/letter-reader.test.ts` snapshots the system prompt. A prompt change shows up in review as a snapshot diff and must bump `PROMPT_VERSION`.
-- Real-model quality is measured only by the eval ([eval.md](eval.md)), run on demand (Actions → Eval → Run workflow, or `npm run eval`).
+- Real-model quality is measured only by the eval ([eval.md](eval.md)), run locally on demand with `npm run eval`. It is not part of CI, so CI never spends API credits.
 
 ## Failure testing (must have a test each)
 
