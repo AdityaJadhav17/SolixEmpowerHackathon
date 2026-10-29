@@ -9,8 +9,6 @@ on:
         default: test
         type: choice
         options: [test, dev, all]
-  schedule:
-    - cron: "0 9 * * *" # 02:00 PDT
 
 permissions: {}
 

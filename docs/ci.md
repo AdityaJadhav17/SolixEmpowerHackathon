@@ -20,9 +20,9 @@ Cheap gates run in parallel; build waits for all of them; deploy waits for every
 | 10  | `sbom`              | SPDX SBOM artifact (anchore/sbom-action). No Dockerfile, so no container scan.                                                         | SBOM generation error                                                                                                                                                                                                                                                                                                           | —                                                                             |
 | 11  | `deploy`            | Vercel CLI production deploy, `main` push only, after all gates                                                                        | Vercel CLI error. Skips with a notice if `VERCEL_TOKEN` is unset.                                                                                                                                                                                                                                                               | —                                                                             |
 
-## `eval.yml` (manual dispatch and nightly 02:00 PDT)
+## `eval.yml` (manual dispatch only)
 
-Runs `npm run eval` against the real model with `ANTHROPIC_API_KEY`, writes the score table to the job summary, uploads `eval/results/` as an artifact. Never runs on PRs (costs money, non-deterministic). It fails until `eval/labels.json` has entries and `readLetter` is implemented.
+Runs `npm run eval` against the real model with `ANTHROPIC_API_KEY`, writes the score table to the job summary, uploads `eval/results/` as an artifact. Never runs on PRs (costs money, non-deterministic). It needs the `ANTHROPIC_API_KEY` repo secret; without it every letter errors and the job fails. Not scheduled, because each run spends API credits.
 
 Run locally: `ANTHROPIC_API_KEY=... npm run eval -- --split test`
 
